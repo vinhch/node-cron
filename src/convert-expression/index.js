@@ -24,7 +24,8 @@ module.exports = (() => {
         for (let i=0; i < expressions.length; i++){
             const numbers = expressions[i].split(',');
             for (let j=0; j<numbers.length; j++){
-                numbers[j] = parseInt(numbers[j]);
+                if (['l', 'L'].indexOf(numbers[j]) === -1)
+                    numbers[j] = parseInt(numbers[j]);
             }
             expressions[i] = numbers;
         }
