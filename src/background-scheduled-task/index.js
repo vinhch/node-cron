@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 const path = require('path');
 const { fork } = require('child_process');
-const uuid = require('uuid');
+const { randomUUID } = require('crypto');
 
 const daemonPath = `${__dirname}/daemon.js`;
 
@@ -17,7 +17,7 @@ class BackgroundScheduledTask extends EventEmitter {
         this.cronExpression = cronExpression;
         this.taskPath = taskPath;
         this.options = options;
-        this.options.name = this.options.name || uuid.v4();
+        this.options.name = this.options.name || randomUUID();
 
         if(options.scheduled){
             this.start();
@@ -38,7 +38,7 @@ class BackgroundScheduledTask extends EventEmitter {
 
         let options = this.options;
         options.scheduled = true;
-        
+
         this.forkProcess.send({
             type: 'register',
             path: path.resolve(this.taskPath),
@@ -46,7 +46,7 @@ class BackgroundScheduledTask extends EventEmitter {
             options: options
         });
     }
-    
+
     stop(){
         if(this.forkProcess){
             this.forkProcess.kill();
