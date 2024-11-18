@@ -3,6 +3,7 @@
 const convertExpression = require('./convert-expression');
 
 const validationRegex = /^(?:\d+|\*|\*\/\d+)$/;
+const charRegex = /^[a-zA-Z0-9-*/, ]+$/;
 
 /**
  * @param {string} expression The Cron-Job expression.
@@ -115,6 +116,9 @@ function validate(pattern) {
 
     const patterns = pattern.split(' ');
     const executablePatterns = convertExpression(pattern).split(' ');
+
+    if (!charRegex.test(pattern))
+        throw new TypeError('pattern includes illegal characters!');
 
     if (patterns.length === 5) patterns.unshift('0');
 

@@ -29,8 +29,6 @@
   "bugs": {
     "url": "https://github.com/merencia/node-cron/issues"
   },
-  "dependencies": {
-  },
   "devDependencies": {
     "chai": "^4.2.0",
     "eslint": "^5.7.0",

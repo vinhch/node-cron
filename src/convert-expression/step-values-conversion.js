@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = (() => {
+    const stepValuePattern = /^(.+)\/(\w+)$/;
     function convertSteps(expressions){
-        var stepValuePattern = /^(.+)\/(\w+)$/;
         for(var i = 0; i < expressions.length; i++){
             var match = stepValuePattern.exec(expressions[i]);
             var isStepValue = match !== null && match.length > 0;
