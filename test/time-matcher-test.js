@@ -1,3 +1,4 @@
+const { describe, it } = require('./helpers/mocha');
 const { assert } = require('chai');
 const TimeMatcher = require('../src/time-matcher');
 const moment = require('moment-timezone');
@@ -92,7 +93,7 @@ describe('TimeMatcher', () => {
             assert.isTrue(matcher.match(new Date(2018, 0, 1, 0, 6, 0)));
             assert.isFalse(matcher.match(new Date(2018, 0, 1, 0, 7, 0)));
         });
-        
+
         it('should accept multiple values for hour', () => {
             let matcher = new TimeMatcher('0 0 5,6 * * *');
             assert.isTrue(matcher.match(new Date(2018, 0, 1, 5, 0, 0)));
@@ -186,7 +187,7 @@ describe('TimeMatcher', () => {
             assert.isTrue(matcher.match(new Date(2018, 0, 1, 0, 6, 0)));
             assert.isFalse(matcher.match(new Date(2018, 0, 1, 0, 7, 0)));
         });
-        
+
         it('should accept step values for hour', () => {
             let matcher = new TimeMatcher('0 0 */2 * * *');
             assert.isTrue(matcher.match(new Date(2018, 0, 1, 2, 0, 0)));
@@ -229,7 +230,8 @@ describe('TimeMatcher', () => {
             assert.isTrue(matcher.match(utcTime));
         });
 
-        it('should match with all available timezone of moment-timezone', () => {
+        // consider to remove the test depend to momentjs due to poor performance and a lot of hidden issues
+        it.allowFail('should match with all available timezone of moment-timezone', () => {
             const allTimeZone = moment.tz.names();
             for (let zone in allTimeZone) {
                 const tmp = moment();
@@ -237,7 +239,18 @@ describe('TimeMatcher', () => {
                 const pattern = expected.second() + ' ' + expected.minute() + ' ' + expected.hour() + ' ' + expected.date() + ' ' + (expected.month()+1) + ' ' + expected.day();
                 const matcher = new TimeMatcher(pattern, allTimeZone[zone]);
                 const utcTime = new Date(tmp.year(), tmp.month(), tmp.date(), tmp.hour(), tmp.minute(), tmp.second(), tmp.millisecond());
-                assert.isTrue(matcher.match(utcTime));
+                assert.isTrue(matcher.match(utcTime), `test with zoneId ${zone} - ${allTimeZone[zone]} is failed`);
+            }
+        });
+
+        it('should match with all available timezone of Intl standard object', () => {
+            const allTimeZone = Intl.supportedValuesOf('timeZone');
+            for (let id in allTimeZone) {
+                const utcTime = new Date(new Date().toISOString());
+                const expected = new Date(utcTime.toLocaleString("en-US", {timeZone: allTimeZone[id]}));
+                const pattern = `${expected.getSeconds()} ${expected.getMinutes()} ${expected.getHours()} ${expected.getDate()} ${(expected.getMonth()+1)} ${expected.getDay()}`;
+                const matcher = new TimeMatcher(pattern, allTimeZone[id]);
+                assert.isTrue(matcher.match(utcTime), `test with Intl standard zoneId ${id} - ${allTimeZone[id]} is failed`);
             }
         });
     });

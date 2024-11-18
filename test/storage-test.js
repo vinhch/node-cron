@@ -16,11 +16,11 @@ describe('storage', () => {
 
     it('should delete a task', () => {
         global.scheduledTasks = new Map();
-        global.scheduledTasks.set('id1', 'test');
-        global.scheduledTasks.set('id2', 'test2');
+        global.scheduledTasks.set('id1', { stop : () => {}});
+        global.scheduledTasks.set('id2', { stop : () => {}});
         storage.delete('id2');
-        assert.equal(storage.getTasks().get('id1'), 'test');
-        assert.equal(storage.getTasks().get('id2'), undefined);
+        assert.exists(storage.getTasks().get('id1'));
+        assert.notExists(storage.getTasks().get('id2'));
     });
 
     describe('on import', () => {

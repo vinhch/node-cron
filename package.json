@@ -9,6 +9,7 @@
   "types": "src/index.d.ts",
   "scripts": {
     "test": "nyc --reporter=html --reporter=text mocha --recursive",
+    "test-selected": "mocha --retries 1 --recursive -c -t 200s",
     "lint": "./node_modules/.bin/eslint ./src ./test",
     "check": "npm run lint && npm test"
   },
@@ -31,11 +32,12 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^5.7.0",
+    "eslint": "^9.15.0",
     "istanbul": "^0.4.2",
-    "mocha": "^6.1.4",
-    "moment-timezone": "^0.5.33",
-    "nyc": "^14.0.0",
+    "mocha": "^10.8.2",
+    "mocha-helpers": "^9.0.1",
+    "moment-timezone": "^0.5.46",
+    "nyc": "^17.1.0",
     "sinon": "^7.3.2"
   }
 }
