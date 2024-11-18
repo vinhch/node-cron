@@ -23,6 +23,12 @@ export function validate(cronExpression: string): boolean;
  */
 export function getTasks(): Map<string, ScheduledTask>;
 
+/**
+ * Deletes a scheduled task by name or reference
+ * @param task This can be a string of the task Id or the task object itself.
+ */
+export function deleteTask(task: string | ScheduledTask): Map<string, ScheduledTask>;
+
 export interface ScheduledTask extends EventEmitter {
     now: (now?: Date) => void;
     start: () => void;
