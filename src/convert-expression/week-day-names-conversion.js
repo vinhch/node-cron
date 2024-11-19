@@ -5,14 +5,15 @@ module.exports = (() => {
     const shortWeekDays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
     function convertWeekDayName(expression, items){
-        for(let i = 0; i < items.length; i++){
+        const arrLength = items.length;
+        for(let i = 0; i < arrLength; i++){
             expression = expression.replace(new RegExp(items[i], 'gi'), parseInt(i, 10));
         }
         return expression;
     }
-  
+
     function convertWeekDays(expression){
-        expression = expression.replace('7', '0');
+        expression = expression.replace('7', '0'); // 0 = 7 = Sunday
         expression = convertWeekDayName(expression, weekDays);
         return convertWeekDayName(expression, shortWeekDays);
     }

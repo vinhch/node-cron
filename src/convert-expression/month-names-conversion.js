@@ -6,17 +6,18 @@ module.exports = (() => {
         'sep', 'oct', 'nov', 'dec'];
 
     function convertMonthName(expression, items){
-        for(let i = 0; i < items.length; i++){
-            expression = expression.replace(new RegExp(items[i], 'gi'), parseInt(i, 10) + 1);
+        const arrLength = items.length;
+        for(let i = 0; i < arrLength; i++){
+            expression = expression.replace(new RegExp(items[i], 'gi'), i + 1);
         }
         return expression;
     }
 
-    function interprete(monthExpression){
+    function interpret(monthExpression){
         monthExpression = convertMonthName(monthExpression, months);
         monthExpression = convertMonthName(monthExpression, shortMonths);
         return monthExpression;
     }
 
-    return interprete;
+    return interpret;
 })();

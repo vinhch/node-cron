@@ -1,7 +1,6 @@
 'use strict';
 module.exports = ( () => {
     function replaceWithRange(expression, text, init, end) {
-
         const numbers = [];
         let last = parseInt(end);
         let first = parseInt(init);

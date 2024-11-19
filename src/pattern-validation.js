@@ -1,9 +1,9 @@
 'use strict';
 
+const {removeSpaces} = require('./utils');
 const convertExpression = require('./convert-expression');
 
 const validationRegex = /^(?:\d+|\*|\*\/\d+)$/;
-const charRegex = /^[a-zA-Z0-9-*/, ]+$/;
 
 /**
  * @param {string} expression The Cron-Job expression.
@@ -13,14 +13,15 @@ const charRegex = /^[a-zA-Z0-9-*/, ]+$/;
  */
 function isValidExpression(expression, min, max) {
     const options = expression.split(',');
+    let optionsLength = options.length;
 
-    for (const option of options) {
-        const optionAsInt = parseInt(option, 10);
+    for (let i=0; i < optionsLength; i++) {
+        const optionAsInt = parseInt(options[i], 10);
 
         if (
             (!Number.isNaN(optionAsInt) &&
                 (optionAsInt < min || optionAsInt > max)) ||
-            !validationRegex.test(option)
+            !validationRegex.test(options[i])
         )
             return false;
     }
@@ -104,25 +105,29 @@ function validateFields(patterns, executablePatterns) {
         throw new Error(`${patterns[5]} is a invalid expression for week day`);
 }
 
+const charRegex = /^[a-zA-Z0-9-*/, ]+$/;
+
 /**
  * Validates a Cron-Job expression pattern.
  *
  * @param {string} pattern The Cron-Job expression pattern.
- * @returns {void}
+ * @returns {string} The sanitized pattern
+ * @throws {Error} Throw error if pattern is not valid
  */
 function validate(pattern) {
     if (typeof pattern !== 'string')
         throw new TypeError('pattern must be a string!');
 
-    const patterns = pattern.split(' ');
-    const executablePatterns = convertExpression(pattern).split(' ');
-
+    pattern = removeSpaces(pattern);
     if (!charRegex.test(pattern))
         throw new TypeError('pattern includes illegal characters!');
 
+    const executablePatterns = convertExpression(pattern.split(' '));
+    const patterns = pattern.split(' '); // to create new ref
     if (patterns.length === 5) patterns.unshift('0');
 
     validateFields(patterns, executablePatterns);
+    return pattern;
 }
 
 module.exports = validate;

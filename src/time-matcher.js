@@ -29,10 +29,10 @@ function matchPattern(pattern, value, year, month){
 
 class TimeMatcher{
     constructor(pattern, timezone){
-        validatePattern(pattern);
-        this.pattern = convertExpression(pattern);
+        this.pattern = validatePattern(pattern);
+        this.expressions = convertExpression(pattern.split(' '));
+        this.convertedPattern = this.expressions.join(' ');
         this.timezone = timezone;
-        this.expressions = this.pattern.split(' ');
         this.dtf = this.timezone
             ? new Intl.DateTimeFormat('en-US', {
                 year: 'numeric',

@@ -8,26 +8,21 @@ const convertSteps = require('./step-values-conversion');
 
 module.exports = (() => {
 
-    function appendSeccondExpression(expressions){
-        if(expressions.length === 5){
-            return ['0'].concat(expressions);
-        }
+    function appendSecondExpression(expressions){
+        if(expressions.length === 5) expressions.unshift('0');
         return expressions;
-    }
-
-    function removeSpaces(str) {
-        return str.replace(/\s{2,}/g, ' ').trim();
     }
 
     // Function that takes care of normalization.
     function normalizeIntegers(expressions) {
         for (let i=0; i < expressions.length; i++){
             const numbers = expressions[i].split(',');
-            for (let j=0; j<numbers.length; j++){
+            const numbersLength = numbers.length;
+            for (let j=0; j<numbersLength; j++){
                 if (['l', 'L'].indexOf(numbers[j]) === -1)
                     numbers[j] = parseInt(numbers[j]);
             }
-            expressions[i] = numbers;
+            expressions[i] = numbers.join(',');
         }
         return expressions;
     }
@@ -49,9 +44,17 @@ module.exports = (() => {
    *  - expression 1-5 * * * *
    *  - Will be translated to 1,2,3,4,5 * * * *
    */
-    function interprete(expression){
-        let expressions = removeSpaces(expression).split(' ');
-        expressions = appendSeccondExpression(expressions);
+    function interpret(expressions){
+        /**
+         * expressions index:
+         * [0] - second, 0-59
+         * [1] - minute, 0-59
+         * [2] - hour, 0-23
+         * [3] - day, 0-30 in array, 1-31 in config
+         * [4] - month, 0-11 in array, 1-12 in config
+         * [5] - dayOfWeek, 0-7 Where 0 = Sunday and 7 = Sunday; Value is a bitmask
+         */
+        expressions = appendSecondExpression(expressions);
         expressions[4] = monthNamesConversion(expressions[4]);
         expressions[5] = weekDayNamesConversion(expressions[5]);
         expressions = convertAsterisksToRanges(expressions);
@@ -60,8 +63,8 @@ module.exports = (() => {
 
         expressions = normalizeIntegers(expressions);
 
-        return expressions.join(' ');
+        return expressions;
     }
 
-    return interprete;
+    return interpret;
 })();

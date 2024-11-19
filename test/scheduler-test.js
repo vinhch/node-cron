@@ -27,12 +27,12 @@ describe('Scheduler', () => {
 
     it('should emit an event every second', (done) => {
         let scheduler = new Scheduler('* * * * * *');
-        let emited = 0;
+        let emitted = 0;
         scheduler.on('scheduled-time-matched', (date) => {
-            emited += 1;
+            emitted += 1;
             assert.isNotNull(date);
             assert.instanceOf(date, Date);
-            if(emited === 5){
+            if(emitted === 5){
                 scheduler.stop();
                 done();
             }
@@ -51,7 +51,7 @@ describe('Scheduler', () => {
         scheduler.start();
         let wait = true;
         let startedAt = new Date();
-        
+
         while(wait){
             if((new Date().getTime() - startedAt.getTime()) > 1000){
                 wait = false;
@@ -75,7 +75,7 @@ describe('Scheduler', () => {
         scheduler.start();
         let wait = true;
         let startedAt = new Date();
-        
+
         while(wait){
             if((new Date().getTime() - startedAt.getTime()) > 1000){
                 wait = false;
